@@ -7,7 +7,3 @@ def index(request):
 
 def profile(request):
     return render(request, 'lk.html')
-
-
-def profile_order(request):
-    return render(request, 'lk-order.html')
