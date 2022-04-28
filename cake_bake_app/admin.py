@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.safestring import mark_safe
 
 from .models import (
     Berry,
@@ -11,7 +12,25 @@ from .models import (
     Order,
     Topping,
     User,
+    AdvertisingCompany, TotalAmount,
 )
+
+
+@admin.register(TotalAmount)
+class TotalAmountAdmin(admin.ModelAdmin):
+    list_display = ('name', 'count_total_amount')
+
+    def count_total_amount(self, obj):
+        all_advertising_companies = AdvertisingCompany.objects.all()
+        total_amount = 0
+        for advertising_company in all_advertising_companies:
+            total_amount += advertising_company.total_amount
+        return mark_safe(f'<h3>{total_amount}</h3>')
+
+
+@admin.register(AdvertisingCompany)
+class AdvertisingCompanyAdmin(admin.ModelAdmin):
+    list_display = ('title', 'total_amount')
 
 
 @admin.register(Cake)

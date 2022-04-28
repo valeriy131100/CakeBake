@@ -19,6 +19,49 @@ class User(AbstractUser):
         return self.username
 
 
+class AdvertisingCompany(models.Model):
+    title = models.CharField(
+        verbose_name="Название компании",
+        max_length=256,
+    )
+    key_word = models.CharField(
+        verbose_name="Ключевое слово",
+        max_length=256,
+    )
+    start_date = models.DateTimeField(
+        verbose_name="Дата начала",
+    )
+    end_date = models.DateTimeField(
+        verbose_name="Дата окончания",
+    )
+    total_amount = models.IntegerField(
+        verbose_name="Выручка",
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = "Рекламная компания"
+        verbose_name_plural = "Рекламные компании"
+        ordering = ("total_amount",)
+
+    def __str__(self):
+        return {self.title}
+
+
+class TotalAmount(models.Model):
+    name = models.CharField(
+        verbose_name="Название",
+        max_length=20,
+    )
+
+    class Meta:
+        verbose_name = "Сумма всех заказов"
+
+    def __str__(self):
+        return self.name
+
+
 class Order(models.Model):
     """Заказ."""
 
