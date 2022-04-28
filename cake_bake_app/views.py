@@ -10,11 +10,42 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from yookassa import Payment, Configuration
 
+from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor
+
 temped_orders = {}
 
 
+def prepare_components_list(query_set):
+    query_set = query_set.order_by('id')
+
+    list_ = ['Без'] + [component.name for component in query_set]
+
+    costs = [0] + [
+        int(component.price) for component in query_set
+    ]
+
+    return {
+        'list': list_,
+        'costs': costs
+    }
+
+
 def index(request):
-    return render(request, 'index.html')
+    levels = LevelsQuantity.objects.all()
+    forms = CakeForm.objects.all()
+    toppings = Topping.objects.all()
+    berries = Berry.objects.all()
+    decors = Decor.objects.all()
+
+    components = {
+        'levels': prepare_components_list(levels),
+        'forms': prepare_components_list(forms),
+        'toppings': prepare_components_list(toppings),
+        'berries': prepare_components_list(berries),
+        'decors': prepare_components_list(decors)
+    }
+
+    return render(request, 'index.html', context={'components': components})
 
 
 def profile(request):

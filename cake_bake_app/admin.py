@@ -6,7 +6,6 @@ from .models import (
     Berry,
     Cake,
     CakeForm,
-    OrderCake,
     Decor,
     LevelsQuantity,
     Order,
@@ -42,12 +41,6 @@ class CakeAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     pass
-
-
-@admin.register(OrderCake)
-class OrderCakeAdmin(admin.ModelAdmin):
-    pass
-
 
 @admin.register(CakeForm)
 class CakeFormAdmin(admin.ModelAdmin):
