@@ -1,15 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
     """Кастомный пользователь."""
 
-    first_name = models.CharField(
-        verbose_name="Имя",
-        max_length=10,
-    )
+    email = models.EmailField(_("email address"), unique=True)
 
     class Meta:
         verbose_name = "Пользователь"
@@ -17,7 +15,7 @@ class User(AbstractUser):
         ordering = ("first_name",)
 
     def __str__(self):
-        return self.username
+        return self.email
 
 
 class AdvertisingCompany(models.Model):
@@ -35,9 +33,9 @@ class AdvertisingCompany(models.Model):
     end_date = models.DateTimeField(
         verbose_name="Дата окончания",
     )
-    readonly_fields = ('amount',)
+    readonly_fields = ("amount",)
 
-    @admin.display(description='Сумма')
+    @admin.display(description="Сумма")
     def amount(self):
         orders = Order.objects.filter(advertising_company=self)
         company_amount = 0
@@ -45,7 +43,6 @@ class AdvertisingCompany(models.Model):
             company_amount += order.price
 
         return company_amount
-
 
     class Meta:
         verbose_name = "Рекламная компания"
@@ -86,14 +83,14 @@ class Order(models.Model):
     user = models.ForeignKey(
         to="User",
         verbose_name="Клиент",
-        on_delete=models.CASCADE,
         related_name="orders",
+        on_delete=models.CASCADE,
     )
     cake = models.ForeignKey(
         to="Cake",
+        verbose_name="Торт",
+        related_name="orders",
         on_delete=models.CASCADE,
-        verbose_name="Список тортов",
-        related_name="cake",
     )
 
     comment = models.TextField(
@@ -130,9 +127,9 @@ class Order(models.Model):
         to="AdvertisingCompany",
         verbose_name="Рекламная компания",
         on_delete=models.CASCADE,
-        related_name="advertising_company",
+        related_name="orders",
         blank=True,
-        null=True
+        null=True,
     )
 
     class Meta:
@@ -141,7 +138,7 @@ class Order(models.Model):
         ordering = ("created_at",)
 
     def __str__(self):
-        return self.user.first_name
+        return f"{self.user.first_name} / заказ от {self.created_at}"
 
 
 class Cake(models.Model):
@@ -151,6 +148,7 @@ class Cake(models.Model):
     title = models.CharField(
         verbose_name="Название",
         max_length=20,
+        blank=True,
     )
     levels = models.ForeignKey(
         to="LevelsQuantity",
@@ -206,19 +204,6 @@ class Cake(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class OrderCake(models.Model):
-    """Промежуточная модель для связи торта и заказа."""
-
-    order = models.ForeignKey(
-        to="Order",
-        on_delete=models.CASCADE,
-    )
-    cake = models.ForeignKey(
-        to="Cake",
-        on_delete=models.CASCADE,
-    )
 
 
 class CakeComponent(models.Model):
