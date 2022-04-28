@@ -227,6 +227,7 @@ class CakeComponent(models.Model):
     name = models.CharField(
         verbose_name="Название",
         max_length=20,
+        unique=True
     )
     price = models.DecimalField(
         max_digits=7,
