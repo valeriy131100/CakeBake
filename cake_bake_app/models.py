@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -34,19 +35,25 @@ class AdvertisingCompany(models.Model):
     end_date = models.DateTimeField(
         verbose_name="Дата окончания",
     )
-    total_amount = models.IntegerField(
-        verbose_name="Выручка",
-        blank=True,
-        null=True,
-    )
+    readonly_fields = ('amount',)
+
+    @admin.display(description='Сумма')
+    def amount(self):
+        orders = Order.objects.filter(advertising_company=self)
+        company_amount = 0
+        for order in orders:
+            company_amount += order.price
+
+        return company_amount
+
 
     class Meta:
         verbose_name = "Рекламная компания"
         verbose_name_plural = "Рекламные компании"
-        ordering = ("total_amount",)
+        ordering = ("title",)
 
     def __str__(self):
-        return {self.title}
+        return self.title
 
 
 class TotalAmount(models.Model):
@@ -82,11 +89,11 @@ class Order(models.Model):
         on_delete=models.CASCADE,
         related_name="orders",
     )
-    cakes = models.ManyToManyField(
+    cake = models.ForeignKey(
         to="Cake",
-        through="OrderCake",
+        on_delete=models.CASCADE,
         verbose_name="Список тортов",
-        related_name="orders",
+        related_name="cake",
     )
 
     comment = models.TextField(
@@ -119,6 +126,14 @@ class Order(models.Model):
         choices=STATUSES,
         default=WAIT,
     )
+    advertising_company = models.ForeignKey(
+        to="AdvertisingCompany",
+        verbose_name="Рекламная компания",
+        on_delete=models.CASCADE,
+        related_name="advertising_company",
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = "Заказ"
@@ -126,7 +141,7 @@ class Order(models.Model):
         ordering = ("created_at",)
 
     def __str__(self):
-        return f"{self.user} - {self.created_at}"
+        return self.user.first_name
 
 
 class Cake(models.Model):

@@ -24,13 +24,14 @@ class TotalAmountAdmin(admin.ModelAdmin):
         all_advertising_companies = AdvertisingCompany.objects.all()
         total_amount = 0
         for advertising_company in all_advertising_companies:
-            total_amount += advertising_company.total_amount
+            total_amount += advertising_company.amount()
+
         return mark_safe(f'<h3>{total_amount}</h3>')
 
 
 @admin.register(AdvertisingCompany)
 class AdvertisingCompanyAdmin(admin.ModelAdmin):
-    list_display = ('title', 'total_amount')
+    list_display = ('title', 'amount')
 
 
 @admin.register(Cake)
