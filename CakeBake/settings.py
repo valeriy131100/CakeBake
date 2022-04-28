@@ -122,6 +122,7 @@ STATICFILES_DIRS = ['static']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'cake_bake_app.User'
+AUTHENTICATION_BACKENDS = ['cake_bake_app.backends.EmailBackend']
 
 YOOKASSA_ACCOUNT_ID = env('YOOKASSA_ACCOUNT_ID', None)
 YOOKASSA_SECRET_KEY = env('YOOKASSA_SECRET_KEY', None)
