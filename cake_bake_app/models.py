@@ -141,7 +141,7 @@ class Order(models.Model):
         ordering = ("created_at",)
 
     def __str__(self):
-        return self.user.first_name
+        return self.cake.title
 
 
 class Cake(models.Model):
