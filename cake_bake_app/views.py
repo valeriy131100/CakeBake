@@ -20,8 +20,8 @@ def prepare_components_list(query_set):
 
     list_ = ['Без'] + [component.name for component in query_set]
 
-    costs = [0] + [
-        int(component.price) for component in query_set
+    costs = [0.0] + [
+        float(component.price) for component in query_set
     ]
 
     return {
