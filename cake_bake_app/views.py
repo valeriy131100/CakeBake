@@ -34,7 +34,6 @@ def index(request):
         'toppings': prepare_components_list(toppings),
         'berries': prepare_components_list(berries),
         'decors': prepare_components_list(decors),
-        'order_quantity': user_orders.count()
     }
 
     user_orders = Order.objects.filter(user=request.user).prefetch_related('cake')
