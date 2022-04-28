@@ -6,6 +6,10 @@ Vue.createApp({
         ErrorMessage: VeeValidate.ErrorMessage,
     },
     data() {
+        let components = JSON.parse(document.getElementById("cake-components").textContent)
+
+        console.log(components)
+
         return {
             schema1: {
                 lvls: (value) => {
@@ -88,18 +92,18 @@ Vue.createApp({
                 }
             },
             DATA: {
-                Levels: ['не выбрано', '1', '2', '3'],
-                Forms: ['не выбрано', 'Круг', 'Квадрат', 'Прямоугольник'],
-                Toppings: ['не выбрано', 'Без', 'Белый соус', 'Карамельный', 'Кленовый', 'Черничный', 'Молочный шоколад', 'Клубничный'],
-                Berries: ['нет', 'Ежевика', 'Малина', 'Голубика', 'Клубника'],
-                Decors: [ 'нет', 'Фисташки', 'Безе', 'Фундук', 'Пекан', 'Маршмеллоу', 'Марципан']
+                Levels: components['levels']['list'],
+                Forms: components['forms']['list'],
+                Toppings: components['toppings']['list'],
+                Berries: components['berries']['list'],
+                Decors: components['decors']['list']
             },
             Costs: {
-                Levels: [0, 400, 750, 1100],
-                Forms: [0, 600, 400, 1000],
-                Toppings: [0, 0, 200, 180, 200, 300, 350, 200],
-                Berries: [0, 400, 300, 450, 500],
-                Decors: [0, 300, 400, 350, 300, 200, 280],
+                Levels: components['levels']['costs'],
+                Forms: components['forms']['costs'],
+                Toppings: components['toppings']['costs'],
+                Berries: components['berries']['costs'],
+                Decors: components['decors']['costs'],
                 Words: 500
             },
             Levels: 0,

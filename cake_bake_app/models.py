@@ -92,8 +92,9 @@ class Order(models.Model):
     cake = models.ForeignKey(
         to="Cake",
         on_delete=models.CASCADE,
-        verbose_name="Список тортов",
-        related_name="cake",
+        verbose_name="Торт",
+        related_name="order",
+        null=True
     )
 
     comment = models.TextField(
@@ -208,25 +209,13 @@ class Cake(models.Model):
         return self.title
 
 
-class OrderCake(models.Model):
-    """Промежуточная модель для связи торта и заказа."""
-
-    order = models.ForeignKey(
-        to="Order",
-        on_delete=models.CASCADE,
-    )
-    cake = models.ForeignKey(
-        to="Cake",
-        on_delete=models.CASCADE,
-    )
-
-
 class CakeComponent(models.Model):
     """Абстрактный класс компонента торта."""
 
     name = models.CharField(
         verbose_name="Название",
         max_length=20,
+        unique=True
     )
     price = models.DecimalField(
         max_digits=7,
