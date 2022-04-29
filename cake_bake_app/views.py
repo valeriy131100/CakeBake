@@ -34,16 +34,16 @@ def login_or_register(request):
 
         if user is not None:
             login(request, user)
-            payload["message"] = "Вход выполнен."
+            payload["message"] = "Вход выполнен"
         else:
             if User.objects.filter(username=email).exists():
-                payload["message"] = "Пользователь с таким email уже зарегистрирован."
+                payload["message"] = "Неверный пароль"
                 return JsonResponse(payload)
 
             user = User.objects.create_user(username=email, email=email, password=password)
             login(request, user)
             # TODO: send email with creds
-            payload["message"] = "Регистрация успешна, проверьте Вашу почту."
+            payload["message"] = "Регистрация успешна"
 
     return JsonResponse(payload)
 
