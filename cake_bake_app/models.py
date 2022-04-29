@@ -1,7 +1,12 @@
+from urllib.parse import urljoin
+
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from CakeBake.settings import BASE_URL
 
 
 class User(AbstractUser):
@@ -18,10 +23,37 @@ class User(AbstractUser):
         return self.email
 
 
+class Link(models.Model):
+    advertising_company = models.OneToOneField(
+        to="AdvertisingCompany",
+        verbose_name="Рекламная компания",
+        related_name="link",
+        on_delete=models.CASCADE,
+    )
+    clicks = models.IntegerField(
+        verbose_name="Количество кликов",
+        blank=True,
+        null=True,
+        default=0,
+    )
+    readonly_fields = ('create_link',)
+
+    @admin.display(description='Созданная ссылка')
+    def create_link(self):
+        link = urljoin(BASE_URL, f'go/{self.advertising_company.key_word}')
+        return link
+
+    class Meta:
+        verbose_name = "Ссылка"
+        verbose_name_plural = "Ссылки"
+        ordering = ("clicks",)
+
+
 class AdvertisingCompany(models.Model):
     title = models.CharField(
         verbose_name="Название компании",
         max_length=256,
+        unique=True,
     )
     key_word = models.CharField(
         verbose_name="Ключевое слово",

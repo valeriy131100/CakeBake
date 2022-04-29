@@ -7,12 +7,12 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.template.response import TemplateResponse
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from yookassa import Configuration, Payment
 
-from .models import User
+from .models import User, AdvertisingCompany, Link
 
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
 
@@ -67,7 +67,7 @@ def prepare_components_list(query_set):
     }
 
 
-def index(request):
+def index(request, key_word=None):
     levels = LevelsQuantity.objects.all()
     forms = CakeForm.objects.all()
     toppings = Topping.objects.all()
@@ -82,7 +82,7 @@ def index(request):
         'decors': prepare_components_list(decors),
     }
 
-    context={
+    context = {
         'components': components,
     }
     if request.user.is_authenticated:
@@ -94,6 +94,18 @@ def index(request):
 
 def profile(request):
     return render(request, 'lk.html')
+
+
+def click_count(request, key_word=None):
+
+    if key_word:
+        link = get_object_or_404(
+            Link.objects.filter(advertising_company__key_word=key_word)
+        )
+        link.clicks = link.clicks + 1
+        link.save()
+
+        return HttpResponseRedirect(reverse("index", args=[key_word]))
 
 
 def check_payment_until_confirm(payment_id, subscription_uuid):
