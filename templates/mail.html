@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<htmllang="ru">
+  <head>
+    <metacharset="UTF-8"/>
+    <metaname="viewport"content="width=device-width, initial-scale=1.0"/>
+    <title>Регистрация на сайте CakeBake</title>
+  </head>
+  <body>
+  {% if user %}
+    Здравствуйте, {{user}}!<br>
+  {% else %}
+    Здравствуйте!
+  {% endif %}
+    <p>Ваша учетная запись на сайте CakeBake создана!
+      В личном кабинете вы можете отслеживать Ваши заказы.</p>
+
+    <p>Ваш логин: {{ email }}<br>
+    Ваш пароль: {{ password }}</p>
+
+    Ваш CakeBake
+
+  </body>
+</html>
