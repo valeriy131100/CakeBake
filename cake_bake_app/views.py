@@ -121,10 +121,6 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-def profile(request):
-    return render(request, 'lk.html')
-
-
 def check_payment_until_confirm(payment_id, subscription_uuid):
     while True:
         payment = Payment.find_one(payment_id)
@@ -240,7 +236,7 @@ def payment(request):
     )
 
 
-def order_list(request):
+def profile(request):
     user_orders = Order.objects.filter(user=request.user).prefetch_related('cake')
     context = {
         'user_orders': user_orders,
