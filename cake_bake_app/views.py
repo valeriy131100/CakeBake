@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST
 from rest_framework import serializers
 from yookassa import Configuration, Payment
 
-from .models import User, Cake, CakeComponent
+from .models import User, Cake, CakeComponent, AdvertisingCompany
 
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
 
@@ -72,6 +72,20 @@ def prepare_components_list(query_set):
 
 
 def index(request):
+    ad_parameter = request.GET.get('ad_company')
+    if ad_parameter:
+        now = timezone.now()
+        try:
+            advertising_company = AdvertisingCompany.objects.get(
+                key_word=ad_parameter,
+                start_date__lt=now,
+                end_date__gt=now
+            )
+        except AdvertisingCompany.DoesNotExist:
+            advertising_company = None
+    else:
+        advertising_company = None
+
     levels = LevelsQuantity.objects.all()
     forms = CakeForm.objects.all()
     toppings = Topping.objects.all()
@@ -88,6 +102,7 @@ def index(request):
 
     context = {
         'components': components,
+        'advertising_company': advertising_company.id
     }
     if request.user.is_authenticated:
         context['is_auth'] = True

@@ -139,6 +139,8 @@ Vue.createApp({
 
         },
         SubmitOrder() {
+            let advertising_company = JSON.parse(document.getElementById("advertising-company").textContent)
+
             let body = JSON.stringify({
                 cake: {
                     title: "Созданный пользователем торт",
@@ -157,6 +159,7 @@ Vue.createApp({
                 delivery_date: this.Dates,
                 delivery_time: this.Time,
                 delivery_comment: this.DelivComments,
+                advertising_company: advertising_company
             }, null ,2)
 
             console.log(body)
@@ -173,7 +176,6 @@ Vue.createApp({
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     window.location.replace(data['redirect']);
                 });
         }
