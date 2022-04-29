@@ -10,5 +10,4 @@ urlpatterns = [
     path('logout/', views.logout_view),
     path('profile/', views.profile),
     path('payment/', views.payment),
-    path('go/<str:key_word>/', views.click_count),
 ]

@@ -6,14 +6,14 @@ import uuid
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from rest_framework import serializers
 from yookassa import Configuration, Payment
 
-from .models import User, Cake, CakeComponent, AdvertisingCompany, Link
+from .models import User, Cake, CakeComponent, AdvertisingCompany
 
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
 
@@ -81,6 +81,8 @@ def index(request):
                 start_date__lt=now,
                 end_date__gt=now
             )
+            advertising_company.clicks += 1
+            advertising_company.save()
         except AdvertisingCompany.DoesNotExist:
             advertising_company = None
     else:
@@ -102,7 +104,8 @@ def index(request):
 
     context = {
         'components': components,
-        'advertising_company': advertising_company.id
+        'advertising_company': (advertising_company.id if advertising_company
+                                else None)
     }
     if request.user.is_authenticated:
         context['is_auth'] = True
@@ -113,18 +116,6 @@ def index(request):
 
 def profile(request):
     return render(request, 'lk.html')
-
-
-def click_count(request, key_word=None):
-
-    if key_word:
-        link = get_object_or_404(
-            Link.objects.filter(advertising_company__key_word=key_word)
-        )
-        link.clicks = link.clicks + 1
-        link.save()
-
-        return HttpResponseRedirect(reverse("index", args=[key_word]))
 
 
 def check_payment_until_confirm(payment_id, subscription_uuid):

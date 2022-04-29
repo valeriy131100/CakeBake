@@ -12,15 +12,7 @@ from .models import (
     Topping,
     User,
     AdvertisingCompany, TotalAmount,
-    Link,
 )
-
-
-@admin.register(Link)
-class LinkAdmin(admin.ModelAdmin):
-    list_display = ('advertising_company', 'create_link', 'clicks')
-    readonly_fields = ('clicks',)
-    list_display_links = ('create_link',)
 
 
 @admin.register(TotalAmount)

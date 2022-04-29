@@ -126,6 +126,3 @@ AUTHENTICATION_BACKENDS = ['cake_bake_app.backends.EmailBackend']
 
 YOOKASSA_ACCOUNT_ID = env('YOOKASSA_ACCOUNT_ID', None)
 YOOKASSA_SECRET_KEY = env('YOOKASSA_SECRET_KEY', None)
-
-
-BASE_URL = 'http://127.0.0.1:8000'
