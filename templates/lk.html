@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 {% block title %}
     Личный кабинет
 {% endblock %}
@@ -53,14 +54,66 @@
 				</div>
 			</v-form>
 			<h2 class="fs_40 cake_pink mt-5">Мои заказы</h2>
-			<span class="cake_grey">У вас еще нет заказов.</span>
-			<p class="cake_grey">Вы можете добавить торт из <a href="./index.html#step2" class="text-decoration-none cake_pink">Каталога</a> или <a href="./index.html#step3" class="text-decoration-none cake_pink">Создать свой</a>.</p>
-			<span class="cake_grey">Есть вопросы?</span>
-			<span class="cake_grey">Воспользуйтесь нашим <a href="https://vk.com/devmanorg" class="text-decoration-none cake_pink">чат-ботом</a>.</span>
+            {% if user_orders %}
+                {% for order in user_orders %}
+                <section class="my-2">
+                    <span class="cake_blue lk__order d-flex" data-bs-toggle="modal" data-bs-target="#OrderModal{{forloop.counter}}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                        </svg>
+                        <span class="ms-1">{{order.cake.title}}</span>
+                    </span>
+                    <aside class="modal fade" id="OrderModal{{forloop.counter}}" tabindex="-1" aria-labelledby="ModalLabel{{forloop.counter}}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title cake_pink" id="ModalLabel{{forloop.counter}}">{{order.cake.title}}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <span class="cake_blue">Уровней: {{order.cake.levels}}</span><br>
+                                    <span class="cake_blue">Форма: {{order.cake.form}}</span><br>
+                                    <span class="cake_blue">Топпинг: {{order.cake.topping}}</span><br>
+                                    {% if order.cake.berry %}
+                                        <span class="cake_blue">Ягоды: {{order.cake.berry}}</span><br>
+                                    {% endif %}
+                                    {% if order.cake.decor %}
+                                    <span class="cake_blue">Декор: {{order.cake.decor}}</span><br>
+                                    {% endif %}
+                                    {% if order.cake.text %}
+                                    <span class="cake_blue">Надпись: {{order.cake.text}}</span><br>
+                                    {% endif %}
+                                    <span class="cake_pink">Цена: {{order.cake.price}} ₽</span>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-between">
+                                    <span class="cake_blue d-flex">Статус: {{order.get_status_display}}</span>
+                                    {% if order.delivery_date and order.delivery_time %}
+                                    {% language 'ru' %}
+                                    <span class="cake_blue d-flex align-items-center">Время доставки: {{order.delivery_date}} в {{order.delivery_time}}</span>
+                                    {% endlanguage %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </section>
+                {% endfor %}
+            {% else %}
+                <span class="cake_grey">У вас еще нет заказов.</span>
+			    <p class="cake_grey">Вы можете добавить торт из <a href="/#step2" class="text-decoration-none cake_pink">Каталога</a> или <a href="./#step3" class="text-decoration-none cake_pink">Создать свой</a>.</p>
+			    <span class="cake_grey">Есть вопросы?</span>
+			    <span class="cake_grey">Воспользуйтесь нашим <a href="https://vk.com/devmanorg" class="text-decoration-none cake_pink">чат-ботом</a>.</span>
+            {% endif %}
 			<button class="btn text-white rounded-pill align-self-end px-5 mt-3 shadow-none cake__button cake__bg_pink">Выйти</button>
 		</div>
 	</div>
 </div>
 
 <script src="{% static 'lk.js' %}"></script>
+<script>
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+</script>
 {% endblock %}

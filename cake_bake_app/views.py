@@ -242,4 +242,4 @@ def profile(request):
         'user_orders': user_orders,
         'order_quantity': user_orders.count()
     }
-    return render(request, 'lk-order.html', context)
+    return render(request, 'lk.html', context)
