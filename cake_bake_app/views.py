@@ -12,9 +12,8 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from yookassa import Configuration, Payment
 
-from .models import User
-
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
+from .models import User
 
 temped_orders = {}
 
@@ -33,16 +32,16 @@ def login_or_register(request):
 
         if user is not None:
             login(request, user)
-            payload["message"] = "Вход выполнен."
+            payload["message"] = "Вход выполнен"
         else:
             if User.objects.filter(username=email).exists():
-                payload["message"] = "Пользователь с таким email уже зарегистрирован."
+                payload["message"] = "Неверный пароль"
                 return JsonResponse(payload)
 
             user = User.objects.create_user(username=email, email=email, password=password)
             login(request, user)
             # TODO: send email with creds
-            payload["message"] = "Регистрация успешна, проверьте Вашу почту."
+            payload["message"] = "Регистрация успешна"
 
     return JsonResponse(payload)
 
