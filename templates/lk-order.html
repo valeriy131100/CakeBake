@@ -56,17 +56,17 @@
 			<h2 class="fs_40 cake_pink mt-5">Мои заказы</h2>
 			{% for order in user_orders %}
 			<section class="my-2">
-				<span class="cake_blue lk__order d-flex" data-bs-toggle="modal" data-bs-target="#OrderModal2">
+				<span class="cake_blue lk__order d-flex" data-bs-toggle="modal" data-bs-target="#OrderModal{{forloop.counter}}">
 					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
 						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
 					</svg>
 					<span class="ms-1">{{order.cake.title}}</span>
 				</span>
-				<aside class="modal fade" id="OrderModal2" tabindex="-1" aria-labelledby="ModalLabel2" aria-hidden="true">
+				<aside class="modal fade" id="OrderModal{{forloop.counter}}" tabindex="-1" aria-labelledby="ModalLabel{{forloop.counter}}" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title cake_pink" id="ModalLabel2">{{order.cake.title}}</h5>
+								<h5 class="modal-title cake_pink" id="ModalLabel{{forloop.counter}}">{{order.cake.title}}</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
