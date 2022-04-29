@@ -16,13 +16,15 @@ from yookassa import Configuration, Payment
 from .models import User, Cake, CakeComponent
 
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
+from .utils.mail import send_creds_mail
+
 
 temped_orders = {}
 
 
 def login_or_register(request):
     """Вход или создание регистрация нового пользователя."""
-    # TODO: handle messages
+
     payload = {"redirect": "/"}
 
     if request.method == "POST":
@@ -40,9 +42,14 @@ def login_or_register(request):
                 payload["message"] = "Неверный пароль"
                 return JsonResponse(payload)
 
+            # в случае если пользователя с таким email нет - создаем
             user = User.objects.create_user(username=email, email=email, password=password)
             login(request, user)
-            # TODO: send email with creds
+            send_creds_mail(
+                recipient_name="",
+                recipient_mail=email,
+                password=password,
+            )
             payload["message"] = "Регистрация успешна"
 
     return JsonResponse(payload)
