@@ -106,6 +106,14 @@ Vue.createApp({
                 Decors: components['decors']['costs'],
                 Words: 500
             },
+            Pks: {
+                Levels: components['levels']['pks'],
+                Forms: components['forms']['pks'],
+                Toppings: components['toppings']['pks'],
+                Berries: components['berries']['pks'],
+                Decors: components['decors']['pks'],
+                Words: 500
+            },
             Levels: 0,
             Form: 0,
             Topping: 0,
@@ -132,21 +140,23 @@ Vue.createApp({
         },
         SubmitOrder() {
             let body = JSON.stringify({
-                Cost: this.Cost,
-                Levels: this.DATA.Levels[this.Levels],
-                Form: this.DATA.Forms[this.Form],
-                Topping: this.DATA.Toppings[this.Topping],
-                Berries: this.DATA.Berries[this.Berries],
-                Decor: this.DATA.Decors[this.Decor],
-                Words: this.Words,
-                Comments: this.Comments,
-                Name: this.Name,
-                Phone: this.Phone,
-                Email: this.Email,
-                Address: this.Address,
-                Dates: this.Dates,
-                Time: this.Time,
-                DelivComments: this.DelivComments,
+                cake: {
+                    title: "Созданный пользователем торт",
+                    levels: this.Pks.Levels[this.Levels],
+                    form: this.Pks.Forms[this.Form],
+                    topping: this.Pks.Toppings[this.Topping],
+                    berry: this.Pks.Berries[this.Berries],
+                    decor: this.Pks.Decors[this.Decor],
+                    text: this.Words
+                },
+                comment: this.Comments,
+                name: this.Name,
+                phone: this.Phone,
+                email: this.Email,
+                delivery_address: this.Address,
+                delivery_date: this.Dates,
+                delivery_time: this.Time,
+                delivery_comment: this.DelivComments,
             }, null ,2)
 
             console.log(body)
