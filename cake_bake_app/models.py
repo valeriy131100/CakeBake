@@ -1,15 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
     """Кастомный пользователь."""
 
-    first_name = models.CharField(
-        verbose_name="Имя",
-        max_length=10,
-    )
+    email = models.EmailField(_("email address"), unique=True)
 
     class Meta:
         verbose_name = "Пользователь"
@@ -17,7 +15,7 @@ class User(AbstractUser):
         ordering = ("first_name",)
 
     def __str__(self):
-        return self.username
+        return self.email
 
 
 class AdvertisingCompany(models.Model):
@@ -45,7 +43,6 @@ class AdvertisingCompany(models.Model):
             company_amount += order.price
 
         return company_amount
-
 
     class Meta:
         verbose_name = "Рекламная компания"
@@ -86,15 +83,15 @@ class Order(models.Model):
     user = models.ForeignKey(
         to="User",
         verbose_name="Клиент",
-        on_delete=models.CASCADE,
         related_name="orders",
+        on_delete=models.CASCADE,
     )
     cake = models.ForeignKey(
         to="Cake",
-        on_delete=models.CASCADE,
         verbose_name="Торт",
-        related_name="order",
-        null=True
+        related_name="orders",
+        on_delete=models.CASCADE,
+        null=True,
     )
 
     comment = models.TextField(
@@ -152,6 +149,7 @@ class Cake(models.Model):
     title = models.CharField(
         verbose_name="Название",
         max_length=20,
+        blank=True,
     )
     levels = models.ForeignKey(
         to="LevelsQuantity",

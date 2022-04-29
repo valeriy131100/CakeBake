@@ -6,6 +6,7 @@ from .models import (
     Berry,
     Cake,
     CakeForm,
+    OrderCake,
     Decor,
     LevelsQuantity,
     Order,
