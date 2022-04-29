@@ -5,14 +5,14 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from django.template.response import TemplateResponse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+from rest_framework import serializers
 from yookassa import Configuration, Payment
 
-from .models import User
+from .models import User, Cake
 
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
 
@@ -117,9 +117,30 @@ def check_payment_until_confirm(payment_id, subscription_uuid):
         time.sleep(5)
 
 
+class CakeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cake
+        fields = (
+            'levels',
+            'form',
+            'topping',
+            'berry',
+            'decor',
+            'text'
+        )
+
+
 @require_POST
 def payment(request):
-    order_description = json.loads(request.body)
+    unvalidated_order = json.loads(request.body)
+
+    serializer = CakeSerializer(data=unvalidated_order['cake'])
+    serializer.is_valid(raise_exception=True)
+
+    print(serializer.validated_data)
+
+    order_description = unvalidated_order
 
     order_uuid = uuid.uuid4()
 
