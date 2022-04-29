@@ -5,15 +5,15 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from django.template.response import TemplateResponse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+from rest_framework import serializers
 from yookassa import Configuration, Payment
 
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
-from .models import User
+from .models import Cake, User
 
 temped_orders = {}
 
@@ -60,9 +60,12 @@ def prepare_components_list(query_set):
         float(component.price) for component in query_set
     ]
 
+    pks = [None] + [component.id for component in query_set]
+
     return {
         'list': list_,
-        'costs': costs
+        'costs': costs,
+        'pks': pks
     }
 
 
@@ -81,14 +84,14 @@ def index(request):
         'decors': prepare_components_list(decors),
     }
 
-    context={
+    context = {
         'components': components,
     }
     if request.user.is_authenticated:
         context['is_auth'] = True
         context['username'] = request.user.username
 
-    return TemplateResponse(request, "index.html", context)
+    return render(request, 'index.html', context)
 
 
 def profile(request):
@@ -113,9 +116,31 @@ def check_payment_until_confirm(payment_id, subscription_uuid):
         time.sleep(5)
 
 
+class CakeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cake
+        fields = (
+            'levels',
+            'form',
+            'topping',
+            'berry',
+            'decor',
+            'text'
+        )
+
+
 @require_POST
 def payment(request):
-    order_description = json.loads(request.body)
+    unvalidated_order = json.loads(request.body)
+
+    serializer = CakeSerializer(data=unvalidated_order['cake'])
+    serializer.is_valid(raise_exception=True)
+
+    print(serializer.validated_data)
+
+    order_description = unvalidated_order
+
     order_uuid = uuid.uuid4()
 
     Configuration.account_id = settings.YOOKASSA_ACCOUNT_ID
@@ -123,7 +148,7 @@ def payment(request):
 
     yoo_payment = Payment.create({
         "amount": {
-            "value": order_description['Cost'],
+            "value": 100,
             "currency": "RUB"
         },
         "confirmation": {
