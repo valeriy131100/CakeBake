@@ -52,9 +52,8 @@ Vue.createApp({
             }
             else {
                 this.Step = 'Finish'
-                console.log('Введённый код:', this.RegInput, 'Регистрация успешна')
+                console.log('Введённый код:', this.RegInput)
                 this.EnteredCode = this.RegInput
-                this.RegInput = 'Регистрация успешна'
 
                 let body = JSON.stringify({
                     email: this.EnteredNumber,
@@ -75,12 +74,21 @@ Vue.createApp({
                         return response.json();
                     })
                     .then((data) => {
-                        window.location.replace(data['redirect']);
+                        this.RegInput = data['message'];
+                        return data;
+                    })
+                    .then((data) => {
+                            setTimeout((data) => {
+                            if (data['message'] === 'Неверный пароль') {
+                                 this.Step = 'Code';
+                                 this.RegInput = '';
+                            }
+                            else {
+                                location.replace(data['redirect']);
+                            }
+                        }, 2000, data)
                     });
             }
-        },
-        ShowMessage() {
-
         },
         ToRegStep1() {
             this.Step = 'Number'
