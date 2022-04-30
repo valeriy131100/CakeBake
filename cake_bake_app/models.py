@@ -2,12 +2,18 @@ from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class User(AbstractUser):
     """Кастомный пользователь."""
 
     email = models.EmailField(_("email address"), unique=True)
+    phone_number = PhoneNumberField(
+        verbose_name=_('Phone'),
+        blank=True, null=True,
+        unique=True,
+    )
 
     class Meta:
         verbose_name = "Пользователь"

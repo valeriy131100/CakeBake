@@ -66,5 +66,26 @@ class BerryAdmin(admin.ModelAdmin):
 class DecorAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    list_display = (
+        'username', 'email', 'phone_number', 'first_name', 'is_staff',
+    )
+    fieldsets = (
+        (None, {
+            'fields': ('username', 'password')
+        }),
+        ('Personal info', {
+            'fields': ('first_name', 'last_name', 'email', 'phone_number')
+        }),
+        ('Permissions', {
+            'fields': (
+                'is_active', 'is_staff', 'is_superuser',
+                'groups', 'user_permissions'
+            )
+        }),
+        ('Important dates', {
+            'fields': ('last_login', 'date_joined')
+        }),
+    )
 
-admin.site.register(User, UserAdmin)

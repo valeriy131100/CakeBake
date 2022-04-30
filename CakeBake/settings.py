@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'phonenumber_field',
     'cake_bake_app',
 ]
 
@@ -136,3 +137,5 @@ EMAIL_PORT = env.int('EMAIL_PORT', '')
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', True)
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+
+PHONENUMBER_DEFAULT_REGION = 'RU'

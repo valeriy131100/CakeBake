@@ -252,7 +252,7 @@ def profile(request):
         'is_auth': True,
         'username': request.user.username,
         'user_first_name': user.first_name,
-        'user_phone': '+7 999 777 1717', # TODO: add phone number in model
+        'user_phone': str(user.phone_number),
         'user_email': user.email,
         # 'user_orders': user_orders, #TODO: get orders too
         'order_quantity': user_orders.count()
@@ -267,7 +267,7 @@ def profile(request):
             user = User.objects.get(username=request.user.username)
             user.email = data['user_email']
             user.username = data['user_email']
-            # user.phone = data['phone']  #TODO: add phone
+            user.phone_number = data['user_phone']
             user.first_name = data['user_first_name']
             user.save()
             return JsonResponse({'message': 'success'})

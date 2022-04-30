@@ -2,3 +2,5 @@ Django~=4.0.4
 yookassa~=2.3.0
 environs~=9.5.0
 djangorestframework~=3.13.1
+django-phonenumber-field~=6.1.0
+phonenumbers~=8.12.47
