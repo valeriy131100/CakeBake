@@ -121,6 +121,9 @@ STATICFILES_DIRS = ['static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# TODO: redirect to registration form
+LOGIN_URL = '/'
+
 AUTH_USER_MODEL = 'cake_bake_app.User'
 AUTHENTICATION_BACKENDS = ['cake_bake_app.backends.EmailBackend']
 

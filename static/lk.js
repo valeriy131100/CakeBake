@@ -7,12 +7,12 @@ Vue.createApp({
     data() {
         return {
             Edit: false,
-            Name: 'Ирина',
-            Phone: '8 909 000-00-00',
-            Email: 'nyam@gmail.com',
+            Name: '',
+            Phone: '',
+            Email: '',
             Schema: {
                 name_format: (value) => {
-                    const regex = /^[a-zA-Zа-яА-я]+$/
+                    const regex = /^[a-zA-Zа-яА-я\s\.\-]+$/
                     if (!value) {
                         return '⚠ Поле не может быть пустым';
                     }
@@ -52,5 +52,31 @@ Vue.createApp({
             this.Edit = false
             console.log(this.Name, this.Phone, this.Email)
         }
-    }
+    },
+    created() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+      body: JSON.stringify({ action: 'load' })
+    };
+    fetch('/profile/', requestOptions)
+    .then(async response => {
+      const data = await response.json();
+      // check for error response
+      if (!response.ok) {
+        // get error message from body or default to response status
+        const error = (data && data.message) || response.status;
+        return Promise.reject(error);
+      }
+      this.Name = data['user_first_name'];
+      this.Phone = data['user_phone'];
+      this.Email = data['user_email'];
+    })
+    .catch(error => {
+      this.errorMessage = error;
+      console.error('There was an error!', error);
+    });
+}
 }).mount('#LK')

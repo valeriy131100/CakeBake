@@ -6,9 +6,10 @@ import uuid
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from rest_framework import serializers
 from yookassa import Configuration, Payment
@@ -236,10 +237,27 @@ def payment(request):
     )
 
 
+@login_required()
 def profile(request):
+    """Вью личного кабинета клиента со списком заказов."""
+
+    try:
+       user = User.objects.get(username=request.user.username)
+    except User.DoesNotExist:
+        # TODO: add logging
+        return redirect('index')
+
     user_orders = Order.objects.filter(user=request.user).prefetch_related('cake')
     context = {
-        'user_orders': user_orders,
+        'is_auth': True,
+        'username': request.user.username,
+        'user_first_name': user.first_name,
+        'user_phone': '+7 999 777 1717', # TODO: add phone number in model
+        'user_email': user.email,
+        # 'user_orders': user_orders, #TODO: get orders too
         'order_quantity': user_orders.count()
     }
+    if request.method == 'POST':
+        return JsonResponse(context)
+
     return render(request, 'lk.html', context)
