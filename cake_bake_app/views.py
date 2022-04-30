@@ -247,16 +247,14 @@ def profile(request):
         # TODO: add logging
         return redirect('index')
 
-    user_orders = Order.objects.filter(user=request.user).prefetch_related('cake')
     context = {
         'is_auth': True,
         'username': request.user.username,
         'user_first_name': user.first_name,
         'user_phone': str(user.phone_number),
         'user_email': user.email,
-        # 'user_orders': user_orders, #TODO: get orders too
-        'order_quantity': user_orders.count()
     }
+
     if request.method == 'POST':
         data = json.loads(request.body)
 
@@ -271,5 +269,11 @@ def profile(request):
             user.first_name = data['user_first_name']
             user.save()
             return JsonResponse({'message': 'success'})
+
+    # if GET
+    # TODO: load orders in js with ajax
+    user_orders = Order.objects.filter(user=request.user).prefetch_related('cake')
+    context['user_orders'] = user_orders
+    context['order_quantity'] = user_orders.count()
 
     return render(request, 'lk.html', context)
