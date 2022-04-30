@@ -202,10 +202,29 @@ class OrderSerializer(serializers.ModelSerializer):
 
 @require_POST
 def payment(request):
-    if request.user.is_anonymous:
-        return JsonResponse({'user': 'Unauthorised'}, status=401)
 
     unvalidated_order = json.loads(request.body)
+
+    if request.user.is_anonymous:
+        password = User.objects.make_random_password(10)
+        # TODO: add checking if user already exist on frontend
+        user = User.objects.create_user(
+            first_name=unvalidated_order['name'],
+            username=unvalidated_order['email'],
+            email=unvalidated_order['email'],
+            phone_number=unvalidated_order['phone'],
+            password=password,
+        )
+        # TODO: add exception processing
+        send_creds_mail(
+            recipient_name=user.first_name,
+            recipient_mail=user.email,
+            password=password
+        )
+        del password
+
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
 
     serializer = OrderSerializer(data=unvalidated_order)
     serializer.is_valid(raise_exception=True)
@@ -222,7 +241,7 @@ def payment(request):
             cost += 500
 
     cake = Cake(
-        title='Торт на заказ',
+        title=f'Торт на заказ ({user.email})',
         price=cost,
         **order_description['cake']
     )
@@ -230,7 +249,7 @@ def payment(request):
     order_description['cake'] = cake
 
     order = Order(
-        user=request.user,
+        user=user,
         price=cost,
         created_at=timezone.now(),
         **order_description
