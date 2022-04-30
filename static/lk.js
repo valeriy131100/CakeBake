@@ -49,9 +49,31 @@ Vue.createApp({
     },
     methods: {
         ApplyChanges() {
-            this.Edit = false
-            console.log(this.Name, this.Phone, this.Email)
-        }
+          this.Edit = false
+          payload = { action: 'edit_user', user_first_name: this.Name, user_phone: this.Phone, user_email: this.Email };
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+          const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify(payload)
+          };
+          fetch('/profile/', requestOptions)
+          .then(async response => {
+             const data = await response.json();
+             // check for error response
+             if (!response.ok) {
+             // get error message from body or default to response status
+             const error = (data && data.message) || response.status;
+             return Promise.reject(error);
+            }
+          })
+          .catch(error => {
+            this.errorMessage = error;
+             console.error('There was an error!', error);
+           });
+        console.log(this.Name, this.Phone, this.Email)
+      }
     },
     created() {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;

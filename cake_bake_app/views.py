@@ -258,6 +258,18 @@ def profile(request):
         'order_quantity': user_orders.count()
     }
     if request.method == 'POST':
-        return JsonResponse(context)
+        data = json.loads(request.body)
+
+        if data['action'] == 'load':
+            return JsonResponse(context)
+
+        if data['action'] == 'edit_user':
+            user = User.objects.get(username=request.user.username)
+            user.email = data['user_email']
+            user.username = data['user_email']
+            # user.phone = data['phone']  #TODO: add phone
+            user.first_name = data['user_first_name']
+            user.save()
+            return JsonResponse({'message': 'success'})
 
     return render(request, 'lk.html', context)
