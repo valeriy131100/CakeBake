@@ -1,5 +1,9 @@
+import csv
+from datetime import date
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.http import HttpResponse
 from django.utils.safestring import mark_safe
 
 from .models import (
@@ -13,6 +17,26 @@ from .models import (
     User,
     AdvertisingCompany, TotalAmount,
 )
+
+
+class ExportCsvMixin:
+    def export_as_csv(self, request, queryset):
+
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+        file_name = f'{meta}{date.today()}'
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(file_name)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    export_as_csv.short_description = "Export Selected"
 
 
 @admin.register(TotalAmount)
@@ -39,8 +63,9 @@ class CakeAdmin(admin.ModelAdmin):
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    pass
+class OrderAdmin(ExportCsvMixin, admin.ModelAdmin):
+    actions = ["export_as_csv"]
+
 
 @admin.register(CakeForm)
 class CakeFormAdmin(admin.ModelAdmin):
@@ -66,6 +91,7 @@ class BerryAdmin(admin.ModelAdmin):
 class DecorAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = (
@@ -88,4 +114,3 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('last_login', 'date_joined')
         }),
     )
-
