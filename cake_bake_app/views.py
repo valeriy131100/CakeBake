@@ -116,10 +116,43 @@ def index(request):
                                 else None)
     }
     if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
         context['is_auth'] = True
         context['username'] = request.user.username
+        # for order
+        context['user_first_name'] = user.first_name
+        context['user_phone_number'] = str(user.phone_number)
+        context['user_email'] = user.email
 
     return render(request, 'index.html', context)
+
+
+@login_required()
+def user_data(request):
+    # TODO: костыль для запросов из фронтенда
+    # TODO: использовать везде в js коде для работы с данными юзера
+    context = {'message': 'error'}
+
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.username)
+        try:
+            latest_order = Order.objects.filter(
+                user__username=request.user
+            ).latest('created_at')
+        except Order.DoesNotExist:
+            latest_order = None
+
+        context['is_auth'] = True
+        context['username'] = request.user.username
+        # for order
+        context['user_first_name'] = user.first_name
+        context['user_phone_number'] = str(user.phone_number)
+        context['user_email'] = user.email
+        if latest_order is not None:
+            context['user_address'] = latest_order.delivery_address
+        context['message'] = 'ok'
+
+    return JsonResponse(context)
 
 
 def check_payment_until_confirm(payment_id, subscription_uuid):

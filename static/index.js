@@ -180,6 +180,26 @@ Vue.createApp({
                 });
         }
     },
+    created() {
+        fetch('/user_data/')
+        .then(async response => {
+          const data = await response.json();
+          // check for error response
+          if (!response.ok) {
+            // get error message from body or default to response status
+            const error = (data && data.message) || response.status;
+            return Promise.reject(error);
+          }
+          this.Name = data['user_first_name'];
+          this.Phone = data['user_phone_number'];
+          this.Email = data['user_email'];
+          this.Address = data['user_address'];
+        })
+        .catch(error => {
+          this.errorMessage = error;
+          console.error("There was an error!", error);
+        });
+    },
     computed: {
         Cost() {
             let W = this.Words ? this.Costs.Words : 0
