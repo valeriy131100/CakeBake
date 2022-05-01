@@ -13,6 +13,7 @@ from .models import (
     Decor,
     LevelsQuantity,
     Order,
+    ActualOrderProxy,
     Topping,
     User,
     AdvertisingCompany, TotalAmount,
@@ -65,6 +66,33 @@ class CakeAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(ExportCsvMixin, admin.ModelAdmin):
     actions = ["export_as_csv"]
+
+    list_display = (
+        '__str__', 'user', 'status', 'delivery_address',
+        'delivery_date', 'delivery_time',
+    )
+
+
+@admin.register(ActualOrderProxy)
+class OrderActualAdmin(admin.ModelAdmin):
+
+    list_display = (
+        '__str__', 'user', 'phone_number', 'status', 'delivery_address',
+        'delivery_date', 'delivery_time',
+    )
+    readonly_fields = ('phone_number', )
+
+    def get_queryset(self, request):
+        statuses_for_show = (
+            Order.WAIT, Order.IN_PROCESS, Order.IN_DELIVERY
+        )
+        qs = super().get_queryset(request)
+        return qs.filter(status__in=statuses_for_show)
+
+    def phone_number(self, obj):
+        return obj.user.phone_number
+
+    phone_number.short_description = 'Телефон'
 
 
 @admin.register(CakeForm)

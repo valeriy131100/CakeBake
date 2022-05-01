@@ -154,6 +154,19 @@ class Order(models.Model):
         return self.cake.title
 
 
+class ActualOrderProxy(Order):
+    """Для удобного отображения необработанных заказов."""
+
+    class Meta:
+        proxy = True
+        verbose_name = "Заказ"
+        verbose_name_plural = "Необработанные заказы"
+        ordering = ("created_at",)
+
+        def __str__(self):
+            return self.cake.title
+
+
 class Cake(models.Model):
     """Модель как для тортов собираемых пользователем,
     так и для готовых типовых тортов."""
