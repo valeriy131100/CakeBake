@@ -19,8 +19,7 @@ from yookassa import Configuration, Payment
 from .models import User, Cake, CakeComponent, AdvertisingCompany
 
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
-from .utils.mail import send_creds_mail
-
+from .utils.mail import send_creds_mail, send_order_mail
 
 temped_orders = {}
 
@@ -169,6 +168,12 @@ def check_payment_until_confirm(payment_id, subscription_uuid):
             cake, order = temped_orders[subscription_uuid]
             cake.save()
             order.save()
+            send_order_mail(
+                recipient_name=order.user.first_name,
+                recipient_mail=order.user.email,
+                order=order,
+                cake=cake,
+            )
             return
 
         time.sleep(5)

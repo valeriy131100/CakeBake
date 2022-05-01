@@ -1,0 +1,42 @@
+{% load l10n %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Заказ #{{ order_number }} на сайте CakeBake</title>
+  </head>
+  {% if user_name %}
+    Здравствуйте, {{user_name}}!<br>
+  {% else %}
+    Здравствуйте!
+  {% endif %}
+    <p>Ваш заказ создан!
+      Вы можете отслеживать Ваши заказы в личном кабинете.</p>
+  {% localize on %}
+  <h3>Детали заказа:</h3>
+    Дата создания: <b>{{ created_at }}</b><br>
+    Номер заказа: <b>{{ order_number }}</b><br>
+    <br>
+    Стоимотсть: <b>{{ price }} &#8381; </b><br>
+    Статус: <b>{{ status }}</b><br>
+    <br>
+    Адрес доставки: <b>{{ delivery_address }}</b><br>
+    Дата доставки: <b>{{ delivery_date }}</b><br>
+    Время доставки: <b>{{ delivery_time }}</b><br>
+    Комментарий курьеру: {% if delivery_comment %}<b>{{ delivery_comment }}</b>{% else %}<b>нет</b>{% endif %}<br>
+    Комментарий к заказу: {% if cake_comment %}<b>{{ cake_comment }}</b>{% else %}<b>нет</b>{% endif %}<br>
+    <br>
+    <h3>Торт</h3>
+    Кол-во уровней: <b>{{ cake_levels }}</b><br>
+    Форма: <b>{{ cake_form }}</b><br>
+    Топпинг: <b>{{ cake_topping }}</b><br>
+    Ягоды: {% if cake_berry  %}<b>{{ cake_berry }}</b>{% else %}<b>нет</b>{% endif %}<br>
+    Декор: {% if cake_decor %}<b>{{ cake_decor }}</b>{% else %}<b>нет</b>{% endif %}<br>
+    Надпись: {% if cake_text %}<b>{{ cake_text }}</b>{% else %}<b>нет</b>{% endif %}<br>
+    </p>
+  <br>
+  {% endlocalize %}
+  Ваш CakeBake
+  </body>
+</html>
