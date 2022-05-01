@@ -77,10 +77,10 @@ class OrderAdmin(ExportCsvMixin, admin.ModelAdmin):
 class OrderActualAdmin(admin.ModelAdmin):
 
     list_display = (
-        '__str__', 'user', 'phone_number', 'status', 'delivery_address',
+        '__str__', 'first_name', 'phone_number', 'status', 'delivery_address',
         'delivery_date', 'delivery_time',
     )
-    readonly_fields = ('phone_number', )
+    readonly_fields = ('phone_number', 'first_name')
 
     def get_queryset(self, request):
         statuses_for_show = (
@@ -89,10 +89,14 @@ class OrderActualAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.filter(status__in=statuses_for_show)
 
+    def first_name(self, obj):
+        return obj.user.first_name
+
     def phone_number(self, obj):
         return obj.user.phone_number
 
     phone_number.short_description = 'Телефон'
+    first_name.short_description = 'Имя'
 
 
 @admin.register(CakeForm)
