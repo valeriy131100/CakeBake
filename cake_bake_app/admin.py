@@ -97,27 +97,27 @@ class OrderActualAdmin(admin.ModelAdmin):
 
 @admin.register(CakeForm)
 class CakeFormAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'price',)
 
 
 @admin.register(LevelsQuantity)
 class LevelsQuantityAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'price',)
 
 
 @admin.register(Topping)
 class ToppingAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'price',)
 
 
 @admin.register(Berry)
 class BerryAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'price',)
 
 
 @admin.register(Decor)
 class DecorAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'price',)
 
 
 @admin.register(User)
