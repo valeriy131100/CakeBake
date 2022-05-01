@@ -153,7 +153,7 @@ Vue.createApp({
                 },
                 comment: this.Comments,
                 name: this.Name,
-                phone: this.Phone,
+                phone_number: this.Phone,
                 email: this.Email,
                 delivery_address: this.Address,
                 delivery_date: this.Dates,

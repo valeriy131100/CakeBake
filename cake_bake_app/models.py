@@ -111,6 +111,17 @@ class Order(models.Model):
         blank=True,
     )
 
+    name = models.CharField(
+        verbose_name="Имя",
+        max_length=200
+    )
+    email = models.EmailField(
+        verbose_name="Почта"
+    )
+    phone_number = PhoneNumberField(
+        verbose_name="Телефон"
+    )
+
     delivery_address = models.TextField(
         verbose_name="Адрес доставки",
     )
@@ -163,8 +174,8 @@ class ActualOrderProxy(Order):
         verbose_name_plural = "Необработанные заказы"
         ordering = ("created_at",)
 
-        def __str__(self):
-            return self.cake.title
+    def __str__(self):
+        return self.cake.title
 
 
 class Cake(models.Model):
