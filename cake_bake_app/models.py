@@ -111,17 +111,6 @@ class Order(models.Model):
         blank=True,
     )
 
-    name = models.CharField(
-        verbose_name="Имя",
-        max_length=200
-    )
-    email = models.EmailField(
-        verbose_name="Почта"
-    )
-    phone_number = PhoneNumberField(
-        verbose_name="Телефон"
-    )
-
     delivery_address = models.TextField(
         verbose_name="Адрес доставки",
     )

@@ -192,9 +192,6 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = (
-            'name',
-            'email',
-            'phone_number',
             'cake',
             'comment',
             'delivery_address',
@@ -219,10 +216,10 @@ def payment(request):
         password = User.objects.make_random_password(10)
         # TODO: add checking if user already exist on frontend
         user = User.objects.create_user(
-            first_name=order_description['name'],
-            username=order_description['email'],
-            email=order_description['email'],
-            phone_number=order_description['phone_number'],
+            first_name=unvalidated_order['name'],
+            username=unvalidated_order['email'],
+            email=unvalidated_order['email'],
+            phone_number=unvalidated_order['phone_number'],
             password=password,
         )
         # TODO: add exception processing
