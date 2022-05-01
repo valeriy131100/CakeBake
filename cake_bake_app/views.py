@@ -1,4 +1,5 @@
 import json
+import random
 import threading
 import time
 import uuid
@@ -213,7 +214,11 @@ def payment(request):
     order_description = serializer.validated_data
 
     if request.user.is_anonymous:
-        password = User.objects.make_random_password(10)
+        password_common = User.objects.make_random_password(8)
+        password_digits = User.objects.make_random_password(8, allowed_chars='0123456789')
+        password_parts = list(password_common + password_digits)
+        random.shuffle(password_parts)
+        password = ''.join(password_parts)
         # TODO: add checking if user already exist on frontend
         user = User.objects.create_user(
             first_name=unvalidated_order['name'],
