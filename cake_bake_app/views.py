@@ -123,7 +123,7 @@ def index(request):
         context['user_first_name'] = user.first_name
         context['user_phone_number'] = str(user.phone_number)
         context['user_email'] = user.email
-
+        context['user_orders_count'] = user.orders.count()
     return render(request, 'index.html', context)
 
 
@@ -292,6 +292,7 @@ def payment(request):
 @login_required()
 def profile(request):
     """Вью личного кабинета клиента со списком заказов."""
+    # TODO: merge with user_data
 
     try:
        user = User.objects.get(username=request.user.username)
@@ -305,6 +306,7 @@ def profile(request):
         'user_first_name': user.first_name,
         'user_phone': str(user.phone_number),
         'user_email': user.email,
+        'user_orders_count': user.orders.count(),
     }
 
     if request.method == 'POST':
