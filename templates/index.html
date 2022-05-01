@@ -20,7 +20,7 @@
 						<label for="reg" class="modal-title font_Gogh fs_40 cake_blue" id="RegModalLabel">Вход / Регистрация</label>
 					</div>
 					<v-form :validation-schema="RegSchema" class="modal-body position-relative d-flex flex-column align-items-center px-5 pb-4" @submit="RegSubmit">
-						<v-field v-if="RegInput !== 'Регистрация успешна' && RegInput !== 'Вход выполнен' && RegInput !== 'Неверный пароль'" v-model="RegInput" name="reg" :type="Step === 'Code' ? 'password' : 'text'" id="reg" :placeholder="Step === `Number` ? `Введите ваш email` : `Введите пароль`" class="form-control cake__textinput"></v-field>
+						<v-field v-if="RegInput !== 'Регистрация успешна' && RegInput !== 'Вход выполнен' && RegInput !== 'Неверный пароль'" v-model="RegInput" name="reg" :type="Step === 'Number' ? 'text' : 'password'" id="reg" :placeholder="Step === `Number` ? `Введите ваш email` : `Введите пароль`" class="form-control cake__textinput"></v-field>
 						<v-field v-if="Step === 'Number'" v-model="RegInput" type="phone" name="email_format" class="d-none"></v-field>
 						<v-field v-if="Step === 'Code'" v-model="RegInput" type="password" name="code_format" class="d-none"></v-field>
 						<button v-if="RegInput !== 'Регистрация успешна' && RegInput !== 'Вход выполнен' && RegInput !== 'Неверный пароль'" type="submit" class="btn text-white w-100 rounded-pill mt-3 py-2 shadow-none cake__button fs_12 cake__bg_pink">Отправить</button>
