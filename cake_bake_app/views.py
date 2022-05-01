@@ -146,7 +146,9 @@ def user_data(request):
         context['username'] = request.user.username
         # for order
         context['user_first_name'] = user.first_name
-        context['user_phone_number'] = str(user.phone_number)
+        context['user_phone_number'] = (
+            str(user.phone_number) if user.phone_number else ''
+        )
         context['user_email'] = user.email
         if latest_order is not None:
             context['user_address'] = latest_order.delivery_address
