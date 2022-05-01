@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+
 from rest_framework import serializers
 from yookassa import Configuration, Payment
 
@@ -207,19 +208,20 @@ class OrderSerializer(serializers.ModelSerializer):
 def payment(request):
 
     unvalidated_order = json.loads(request.body)
-
     serializer = OrderSerializer(data=unvalidated_order)
     serializer.is_valid(raise_exception=True)
 
     order_description = serializer.validated_data
 
-    if request.user.is_anonymous:
+    try:
+        user = User.objects.get(username=unvalidated_order['email'])
+    except User.DoesNotExist:
         password_common = User.objects.make_random_password(8)
         password_digits = User.objects.make_random_password(8, allowed_chars='0123456789')
         password_parts = list(password_common + password_digits)
         random.shuffle(password_parts)
         password = ''.join(password_parts)
-        # TODO: add checking if user already exist on frontend
+
         user = User.objects.create_user(
             first_name=unvalidated_order['name'],
             username=unvalidated_order['email'],
@@ -231,12 +233,9 @@ def payment(request):
         send_creds_mail(
             recipient_name=user.first_name,
             recipient_mail=user.email,
-            password=password
+            password=password,
         )
         del password
-
-    if request.user.is_authenticated:
-        user = User.objects.get(username=request.user.username)
 
     cost = 0
 
