@@ -5,6 +5,7 @@ import threading
 import time
 import uuid
 
+import pytz
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse
@@ -12,6 +13,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.utils.timezone import make_aware
 from django.views.decorators.http import require_POST
 
 from rest_framework import serializers
@@ -269,8 +271,10 @@ def payment(request):
         order_description["delivery_time"].minute,
         order_description["delivery_time"].second,
     )
+    delivery_time_naive = make_aware(delivery_time, timezone=pytz.timezone(settings.TIME_ZONE))
+    now = timezone.localtime()
 
-    if delivery_time <= datetime.datetime.now() + datetime.timedelta(hours=24):
+    if delivery_time_naive <= now + datetime.timedelta(hours=24):
         cost = int(int(cost) * 1.2)
 
     cake = Cake(
