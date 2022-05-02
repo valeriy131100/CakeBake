@@ -174,7 +174,7 @@ class Cake(models.Model):
 
     title = models.CharField(
         verbose_name="Название",
-        max_length=20,
+        max_length=200,
         blank=True,
     )
     levels = models.ForeignKey(
