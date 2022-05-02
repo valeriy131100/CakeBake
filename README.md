@@ -35,6 +35,7 @@ python3 manage.py runserver
 - `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 - `DATABASE_URL` — см [здесь](https://github.com/kennethreitz/dj-database-url#url-schema)
 - `CSRF_TRUSTED_ORIGINS` — см [документацию Django](https://docs.djangoproject.com/en/4.0/ref/settings/#csrf-trusted-origins)
+- `TIME_ZONE` — часовой пояс, например `Europe/Moscow`, [документация Django](https://docs.djangoproject.com/en/4.0/ref/settings/#std:setting-TIME_ZONE)
 
 #### Настройки приема платежей через yookassa
 - `YOOKASSA_ACCOUNT_ID` 
