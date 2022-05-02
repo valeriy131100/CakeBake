@@ -34,6 +34,7 @@ python3 manage.py runserver
 - `SECRET_KEY` — секретный ключ проекта
 - `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 - `DATABASE_URL` — см [здесь](https://github.com/kennethreitz/dj-database-url#url-schema)
+- `CSRF_TRUSTED_ORIGINS` — см [документацию Django](https://docs.djangoproject.com/en/4.0/ref/settings/#csrf-trusted-origins)
 
 #### Настройки приема платежей через yookassa
 - `YOOKASSA_ACCOUNT_ID` 
