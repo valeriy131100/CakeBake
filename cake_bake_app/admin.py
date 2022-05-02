@@ -125,7 +125,9 @@ class DecorAdmin(admin.ModelAdmin):
 
 
 @admin.register(User)
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(ExportCsvMixin, UserAdmin):
+    actions = ["export_as_csv"]
+
     list_display = (
         'username', 'email', 'phone_number', 'first_name', 'is_staff',
     )
