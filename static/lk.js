@@ -12,7 +12,7 @@ Vue.createApp({
             Email: '',
             Schema: {
                 name_format: (value) => {
-                    const regex = /^[a-zA-Zа-яА-я\s\.\-]+$/
+                    const regex = /^[a-zA-Zа-яА-яЁё\s\.\-]+$/
                     if (!value) {
                         return '⚠ Поле не может быть пустым';
                     }
