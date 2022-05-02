@@ -51,7 +51,10 @@ class TotalAmountAdmin(admin.ModelAdmin):
     )
 
     def count_total_amount(self, obj):
-        all_advertising_companies = AdvertisingCompany.objects.all()
+        all_advertising_companies = (
+            AdvertisingCompany.objects
+                              .prefetch_related('orders')
+        )
         total_amount = 0
         for advertising_company in all_advertising_companies:
             total_amount += advertising_company.amount()

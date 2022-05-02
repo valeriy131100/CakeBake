@@ -49,7 +49,7 @@ class AdvertisingCompany(models.Model):
 
     @admin.display(description='Сумма')
     def amount(self):
-        orders = Order.objects.filter(advertising_company=self)
+        orders = self.orders.all()
         company_amount = 0
         for order in orders:
             company_amount += order.price
@@ -141,7 +141,7 @@ class Order(models.Model):
         to="AdvertisingCompany",
         verbose_name="Рекламная компания",
         on_delete=models.CASCADE,
-        related_name="advertising_company",
+        related_name="orders",
         blank=True,
         null=True
     )
