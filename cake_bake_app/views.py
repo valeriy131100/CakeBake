@@ -86,7 +86,7 @@ def prepare_components_list(query_set):
 def index(request):
     ad_parameter = request.GET.get('ad_company')
     if ad_parameter:
-        now = timezone.now()
+        now = timezone.localtime()
         try:
             advertising_company = AdvertisingCompany.objects.get(
                 key_word=ad_parameter,
@@ -114,7 +114,7 @@ def index(request):
         'decors': prepare_components_list(decors),
     }
 
-    today = timezone.now()
+    today = timezone.localtime()
     after_month = today + datetime.timedelta(days=30)
 
     context = {
@@ -288,7 +288,7 @@ def payment(request):
     order = Order(
         user=user,
         price=cost,
-        created_at=timezone.now(),
+        created_at=timezone.localtime(),
         **order_description
     )
 
