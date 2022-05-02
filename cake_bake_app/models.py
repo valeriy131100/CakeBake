@@ -73,6 +73,7 @@ class TotalAmount(models.Model):
 
     class Meta:
         verbose_name = "Сумма всех заказов"
+        verbose_name_plural = 'Суммарные стоимости заказов'
 
     def __str__(self):
         return self.name
