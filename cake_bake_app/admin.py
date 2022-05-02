@@ -43,6 +43,12 @@ class ExportCsvMixin:
 @admin.register(TotalAmount)
 class TotalAmountAdmin(admin.ModelAdmin):
     list_display = ('name', 'count_total_amount')
+    readonly_fields = ('count_total_amount',)
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'count_total_amount')
+        }),
+    )
 
     def count_total_amount(self, obj):
         all_advertising_companies = AdvertisingCompany.objects.all()
@@ -50,7 +56,11 @@ class TotalAmountAdmin(admin.ModelAdmin):
         for advertising_company in all_advertising_companies:
             total_amount += advertising_company.amount()
 
-        return mark_safe(f'<h3>{total_amount}</h3>')
+        return mark_safe(f'<b>{total_amount} &#8381; <b>')
+
+    count_total_amount.short_description = (
+            'Суммарная стоимость заказов по всем рекламным компаниям'
+    )
 
 
 @admin.register(AdvertisingCompany)
