@@ -261,6 +261,18 @@ def payment(request):
         if (field == 'text') and field_value:
             cost += 500
 
+    delivery_time = datetime.datetime(
+        order_description["delivery_date"].year,
+        order_description["delivery_date"].month,
+        order_description["delivery_date"].day,
+        order_description["delivery_time"].hour,
+        order_description["delivery_time"].minute,
+        order_description["delivery_time"].second,
+    )
+
+    if delivery_time <= datetime.datetime.now() + datetime.timedelta(hours=24):
+        cost = int(int(cost) * 1.2)
+
     cake = Cake(
         title=f'Торт на заказ ({user.email})',
         price=cost,

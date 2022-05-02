@@ -256,6 +256,7 @@
 								<v-field v-model="Address" :class="Address ? 'cake__border_blue': ''" type="text" name="address" id="address" placeholder="Введите ваш адрес" class="form-control my-3 cake__textinput"></v-field>
 								<v-field v-model="Dates" :class="Dates ? 'cake__border_blue': ''" type="date" name="date" id="date" placeholder="ДД.ММ.ГГ" class="form-control my-3 cake__textinput" min="{{ delivery_date_min }}" max="{{ delivery_date_max }}"></v-field>
 								<v-field v-model="Time" :class="Time ? 'cake__border_blue': ''" type="time" name="time" id="time" placeholder="12:00" class="form-control my-3 cake__textinput" min="{{ delivery_time_min }}" max="{{ delivery_time_max }}" required></v-field>
+								<label for="deliv-comment" class="cake_blue">* если доставка в ближайшие 24 часов, +20% к сумме заказа</label>
 							</div>
 						</div>
 						<div class="row mt-3">
