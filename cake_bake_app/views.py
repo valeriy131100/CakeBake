@@ -86,7 +86,7 @@ def prepare_components_list(query_set):
 def index(request):
     ad_parameter = request.GET.get('ad_company')
     if ad_parameter:
-        now = timezone.localtime()
+        now = timezone.now()
         try:
             advertising_company = AdvertisingCompany.objects.get(
                 key_word=ad_parameter,
