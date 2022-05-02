@@ -298,8 +298,7 @@ def payment(request):
 
     threading.Thread(
         target=check_payment_until_confirm,
-        args=[yoo_payment.id, order_uuid],
-        daemon=True
+        args=[yoo_payment.id, order_uuid]
     ).start()
 
     return JsonResponse(
