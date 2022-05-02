@@ -1,3 +1,4 @@
+import datetime
 import json
 import random
 import threading
@@ -19,8 +20,7 @@ from yookassa import Configuration, Payment
 from .models import User, Cake, CakeComponent, AdvertisingCompany
 
 from .models import LevelsQuantity, CakeForm, Topping, Berry, Decor, Order
-from .utils.mail import send_creds_mail
-
+from .utils.mail import send_creds_mail, send_order_mail
 
 temped_orders = {}
 
@@ -112,10 +112,18 @@ def index(request):
         'decors': prepare_components_list(decors),
     }
 
+    today = timezone.now()
+    after_month = today + datetime.timedelta(days=30)
+
     context = {
         'components': components,
         'advertising_company': (advertising_company.id if advertising_company
-                                else None)
+                                else None),
+
+        'delivery_date_min': today.strftime("%Y-%m-%d"),  # in format YYYY-mm-dd
+        'delivery_date_max': after_month.strftime("%Y-%m-%d"),
+        'delivery_time_min': '10:00',
+        'delivery_time_max': '21:00',  # TODO: set in settings or admin
     }
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
@@ -126,6 +134,7 @@ def index(request):
         context['user_phone_number'] = str(user.phone_number)
         context['user_email'] = user.email
         context['user_orders_count'] = user.orders.count()
+
     return render(request, 'index.html', context)
 
 
@@ -169,6 +178,12 @@ def check_payment_until_confirm(payment_id, subscription_uuid):
             cake, order = temped_orders[subscription_uuid]
             cake.save()
             order.save()
+            send_order_mail(
+                recipient_name=order.user.first_name,
+                recipient_mail=order.user.email,
+                order=order,
+                cake=cake,
+            )
             return
 
         time.sleep(5)
